@@ -1,0 +1,20 @@
+{
+  "format": "prove.chain.v1",
+  "exported_at": "2026-11-06T00:00:00Z",
+  "source": "synthetic syntax-only fixture; not a trusted Bitcoin chain",
+  "tip": {"height": 10, "hash": "abababababababababababababababababababababababababababababababab"},
+  "node": {
+    "chain": "main",
+    "initialblockdownload": false,
+    "blocks": 10,
+    "headers": 10,
+    "verificationprogress": "0.9999"
+  },
+  "blocks": {
+    "10": {
+      "hash": "abababababababababababababababababababababababababababababababab",
+      "header": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "confirmations": 1
+    }
+  }
+}

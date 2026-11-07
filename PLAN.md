@@ -1,6 +1,12 @@
 # Prove project plan
 
-Revision 4, 2026-11-05. Adversarial plan review approved; first implementation scope awaits Chris's approval. Implementation has not started. The revised scope replaces the original project brief where they differ.
+Revision 5, 2026-11-06. Chris authorized implementation through a standalone CLI candidate ready for external research-session testing, with adversarial critique and documented feedback. Implementation begins from the reviewed plan. This revision replaces earlier approval holds for that scope.
+
+## Standalone product requirement
+
+Chris clarified on 2026-11-06: Prove is an independent, general-purpose, easily installable CLI. Colony Zero and Ouroboros are external consumers used for acceptance testing. The shipped package, core manifest and receipt formats, generic workflow, verifier and quickstart must have no dependency on those repositories, their naming, internal paths, schemas, services or hardware. A clean user must be able to install a built wheel with pip or pipx and complete the documented generic example without a research-project checkout, private credentials or a TriplePass Labs service. Public PyPI publication remains a later release step; the candidate must be installable from its versioned wheel and source distribution now.
+
+Generic manifests, artifact ingestion and data-only verification are the primary interfaces. Harness-specific import adapters are optional conveniences; they cannot be required by the core package or the primary installation path. Colony/Ouroboros integration belongs in external instructions and examples, never in project-specific core behavior. Keep the first public-facing quickstart domain-neutral. The testing handoff asks a separate research session to use the installed CLI as an ordinary external user and document friction, defects and missing general capabilities.
 
 ## Goal and product decision
 

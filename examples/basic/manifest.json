@@ -1,0 +1,17 @@
+{
+  "format": "prove.manifest.v1",
+  "nonce": "00112233445566778899aabbccddeeff",
+  "name": "Example evaluation output receipt",
+  "description": "A domain-neutral conformance example. Generate a fresh nonce for a real registration.",
+  "profile": "artifacts-v1",
+  "attempts": [{"id": "run-1", "sample_ids": []}],
+  "dataset": {"name": "unspecified", "sha256": null},
+  "model": {"id": "unspecified", "evidence": "self_declared", "sha256": null},
+  "harness": {"name": "external", "revision": "unspecified", "config": {}},
+  "generation": {"prompt_sha256": null, "parameters": {}},
+  "scorer": {"profile": "recorded-only-v1", "revision": "unspecified"},
+  "analysis": {"revision": "unspecified", "plan_sha256": null},
+  "budget": {"max_calls": null, "max_input_tokens": null, "max_output_tokens": null},
+  "stopping_rule": "producer-controlled",
+  "metadata": {"conformance_example": true}
+}

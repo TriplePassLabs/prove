@@ -1,0 +1,88 @@
+name: CI
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-distribute:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PIP_NO_INPUT: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      PIP_DEFAULT_TIMEOUT: '30'
+      PIP_RETRIES: '2'
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install contributor dependencies
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            if python -m pip install 'setuptools>=77' wheel '.[dev]'; then
+              break
+            fi
+            if (( attempt == 3 )); then
+              exit 1
+            fi
+            sleep "$(( attempt * 5 ))"
+          done
+          python -m pip check
+
+      - name: Run full test suite
+        run: python -m pytest
+
+      - name: Audit and check clean installs
+        shell: bash
+        run: |
+          set -euo pipefail
+          dist_dir="$(mktemp -d "$RUNNER_TEMP/prove-dist.XXXXXX")"
+          wheel_env="$(mktemp -d "$RUNNER_TEMP/prove-wheel.XXXXXX")"
+          source_env="$(mktemp -d "$RUNNER_TEMP/prove-source.XXXXXX")"
+          expected_version="$(python -c 'import tomllib; from pathlib import Path; print(tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"])')"
+
+          pip_install() {
+            local python_bin="$1"
+            shift
+            for attempt in 1 2 3; do
+              if "$python_bin" -m pip install "$@"; then
+                return 0
+              fi
+              if (( attempt == 3 )); then
+                return 1
+              fi
+              sleep "$(( attempt * 5 ))"
+            done
+          }
+
+          python -m build --no-isolation --outdir "$dist_dir" .
+          python tools/check_distribution.py --dist "$dist_dir" --source-root .
+
+          python -m venv "$wheel_env"
+          pip_install "$wheel_env/bin/python" "$dist_dir"/*.whl
+          "$wheel_env/bin/python" -m pip check
+          python tools/check_install.py --python "$wheel_env/bin/python" --expected-version "$expected_version"
+
+          python -m venv "$source_env"
+          pip_install "$source_env/bin/python" "$dist_dir"/*.tar.gz
+          "$source_env/bin/python" -m pip check
+          python tools/check_install.py --python "$source_env/bin/python" --expected-version "$expected_version"

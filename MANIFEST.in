@@ -1,0 +1,21 @@
+include LICENSE NOTICE README.md RUNBOOK.md PLAN.md pyproject.toml
+
+# Public source inputs needed to rebuild, test, and audit an sdist.
+graft src/prove
+graft tests
+graft docs
+graft .github
+graft examples/basic
+graft conformance
+graft tools
+
+# Local planning, worker state, and generated files are never source inputs.
+prune .git
+prune .planning
+prune .superpowers
+prune .worker
+prune .venv
+prune build
+prune dist
+prune .pytest_cache
+global-exclude *.pyc *.pyo .DS_Store

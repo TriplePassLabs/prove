@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prove external candidate feedback",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "candidate", "environment", "checks", "findings", "claim_assessment", "recommendation"],
+  "properties": {
+    "format": {"const": "prove.testing-feedback.v1"},
+    "candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["version", "commit", "distribution", "sha256"],
+      "properties": {
+        "version": {"type": "string", "minLength": 1},
+        "commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "distribution": {"type": ["string", "null"]},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["project", "os", "architecture", "python", "install_command", "dependency_inventory", "offline_enforcement"],
+      "properties": {
+        "project": {"type": "string"}, "os": {"type": "string"},
+        "architecture": {"type": "string"}, "python": {"type": "string"},
+        "install_command": {"type": "string"}, "dependency_inventory": {"type": "string"},
+        "offline_enforcement": {"type": "string"}
+      }
+    },
+    "checks": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "status", "commands", "exit_codes", "evidence", "notes"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["passed", "failed", "not_run"]},
+          "commands": {"type": "array", "items": {"type": "string"}},
+          "exit_codes": {"type": "array", "items": {"type": "integer"}},
+          "evidence": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "findings": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "severity", "summary", "expected", "observed", "reproducer", "evidence"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["blocker", "high", "medium", "low"]},
+          "summary": {"type": "string", "minLength": 1},
+          "expected": {"type": "string"}, "observed": {"type": "string"},
+          "reproducer": {"type": "array", "items": {"type": "string"}},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "claim_assessment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["integrity", "inclusion_scope", "score", "timestamp", "chain_source", "execution_and_identity_limits"],
+      "properties": {
+        "integrity": {"type": "string"}, "inclusion_scope": {"type": "string"},
+        "score": {"type": "string"}, "timestamp": {"type": "string"},
+        "chain_source": {"type": "string"}, "execution_and_identity_limits": {"type": "string"}
+      }
+    },
+    "recommendation": {"enum": ["not_assessed", "iterate", "ready_for_further_review"]}
+  },
+  "allOf": [{
+    "if": {"properties": {"recommendation": {"enum": ["iterate", "ready_for_further_review"]}}},
+    "then": {"properties": {
+      "candidate": {"properties": {
+        "commit": {"type": "string"}, "distribution": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string"}
+      }},
+      "checks": {
+        "minItems": 9, "maxItems": 9,
+        "allOf": [
+          {"contains": {"properties": {"id": {"const": "install"}}}},
+          {"contains": {"properties": {"id": {"const": "generic-offline"}}}},
+          {"contains": {"properties": {"id": {"const": "insufficient-anchor"}}}},
+          {"contains": {"properties": {"id": {"const": "inclusion"}}}},
+          {"contains": {"properties": {"id": {"const": "tamper"}}}},
+          {"contains": {"properties": {"id": {"const": "no-clobber"}}}},
+          {"contains": {"properties": {"id": {"const": "external-producer"}}}},
+          {"contains": {"properties": {"id": {"const": "live-anchor"}}}},
+          {"contains": {"properties": {"id": {"const": "claims"}}}}
+        ],
+        "items": {
+          "if": {"properties": {"status": {"const": "not_run"}}},
+          "then": {"properties": {"notes": {"minLength": 1}}}
+        }
+      }
+    }}
+  }]
+}

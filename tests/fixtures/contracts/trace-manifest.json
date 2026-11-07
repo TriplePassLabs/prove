@@ -1,0 +1,17 @@
+{
+  "format": "prove.manifest.v1",
+  "nonce": "102132435465768798a9bacbdcedfe0f",
+  "name": "Standalone trace contract fixture",
+  "description": "Fixed conformance nonce; no model execution or issuer authentication implied.",
+  "profile": "trace-v1",
+  "attempts": [{"id": "run-1", "sample_ids": ["sample-1"]}],
+  "dataset": {"name": "unspecified", "sha256": null},
+  "model": {"id": "unspecified", "evidence": "self_declared", "sha256": null},
+  "harness": {"name": "external", "revision": "unspecified", "config": {}},
+  "generation": {"prompt_sha256": null, "parameters": {}},
+  "scorer": {"profile": "recorded-only-v1", "revision": "unspecified"},
+  "analysis": {"revision": "unspecified", "plan_sha256": null},
+  "budget": {"max_calls": null, "max_input_tokens": null, "max_output_tokens": null},
+  "stopping_rule": "producer-controlled",
+  "metadata": {"conformance_example": true}
+}

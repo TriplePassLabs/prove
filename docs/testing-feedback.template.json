@@ -1,0 +1,19 @@
+{
+  "format": "prove.testing-feedback.v1",
+  "candidate": {"version": "0.1.0a1", "commit": null, "distribution": null, "sha256": null},
+  "environment": {"project": "", "os": "", "architecture": "", "python": "", "install_command": "", "dependency_inventory": "", "offline_enforcement": ""},
+  "checks": [
+    {"id": "install", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "generic-offline", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "insufficient-anchor", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "inclusion", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "tamper", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "no-clobber", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "external-producer", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "live-anchor", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""},
+    {"id": "claims", "status": "not_run", "commands": [], "exit_codes": [], "evidence": [], "notes": ""}
+  ],
+  "findings": [],
+  "claim_assessment": {"integrity": "", "inclusion_scope": "", "score": "", "timestamp": "", "chain_source": "", "execution_and_identity_limits": ""},
+  "recommendation": "not_assessed"
+}
