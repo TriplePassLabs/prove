@@ -28,6 +28,14 @@ prove seal receipt --artifacts outputs --score-path metrics.json --aggregate agg
 
 The manifest's scorer profile controls interpretation. With `recorded-only-v1`, the aggregate is recorded without recomputing the metric. Omitting `--score-path` yields an unavailable score even when a file is named metrics.json. The separate `fixture-exact-v1` rule recomputes only its closed deterministic fixture format. It does not verify a model ran or authenticate producer labels/observations.
 
+Keep raw output files and complex producer-specific semantics in the frozen artifacts unless a supported scorer explicitly recomputes them. For example, an external program may preserve per-condition metrics and select one ratio as a recorded-only aggregate:
+
+```json
+{"selected_ratio":{"numerator":3,"denominator":4},"selection_rule":"highest eligible condition"}
+```
+
+That object is an example metrics artifact, not the `--aggregate` input. Write the selected ratio alone as `{"numerator":3,"denominator":4}` in the separate aggregate file shown above. Prove does not extract `selected_ratio` or check the selection rule automatically. The selection rule and per-condition values remain preserved declarations. Likewise, ledger roots, weight-digest strings, and model declarations are not automatically authenticated as trace, model-identity, or score evidence. Do not invent trace events or map arbitrary producer data to `fixture-exact-v1`; project-specific parsing and adapters remain outside this generic core.
+
 `seal --artifacts outputs` copies those files into `receipt/artifacts`. Full verification checks that frozen copy. Moving, editing or deleting the original `outputs` directory afterward does not change the receipt's validity. Changing `receipt/artifacts` does. There is no `verify --artifacts` option to compare an external working directory. Use a new registration/receipt for a new experiment, or a separate receipt for each already declared attempt; do not overwrite sealed artifacts.
 
 The producer retains `.prove/staging` and its journal after a successful seal. These are durable recovery checkpoints, not a sign that the seal failed. Staging can contain another complete artifact copy, and retries can retain additional candidate stages, so account for their disk usage. Version0.1.0a1 has no automatic staging cleanup command. Keep the original producer state for retry and recovery.

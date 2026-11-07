@@ -6,10 +6,12 @@ Prove freezes evaluation plans and ordinary output files into standalone receipt
 
 It binds an evaluation plan, recorded artifacts and reported results to commitments with optional OpenTimestamps evidence. Verification distinguishes artifact integrity from claims about execution, model identity, timing and scientific validity.
 
-Version `0.1.0a1` is an unreleased implementation candidate for Linux with Python 3.11 through 3.13. Use a supported interpreter and install the reviewed wheel in its own environment:
+Version `0.1.0a1` is an unreleased implementation candidate for Linux with Python 3.11 through 3.13. Use a supported interpreter and install the reviewed wheel in its own environment. The example below selects Python 3.12; substitute your supported interpreter when needed.
+
+On Ubuntu or Debian, that interpreter needs its matching venv package before environment creation. Ubuntu 24.04 users selecting Python 3.12 need `python3.12-venv`. The [offline quickstart](docs/QUICKSTART.md) gives the prerequisite and an optional fallback when `uv` is already installed. See the [Ubuntu Python setup guide](https://ubuntu.com/developers/docs/howto/python-setup/) and [package record](https://packages.ubuntu.com/noble/python3.12-venv).
 
 ```sh
-python3 -m venv .venv-prove
+python3.12 -m venv .venv-prove
 . .venv-prove/bin/activate
 python -m pip install /absolute/path/to/triplepass_prove-0.1.0a1-py3-none-any.whl
 prove --version

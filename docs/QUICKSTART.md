@@ -1,13 +1,33 @@
 # Offline quickstart
 
-The supported runtime target is Linux with Python 3.11 through 3.13. This is an unreleased candidate; see the readiness audit for observed gates. With a supported interpreter, create an isolated environment and install the reviewed wheel:
+The supported runtime target is Linux with Python 3.11 through 3.13. This is an unreleased candidate; see the readiness audit for observed gates. Select one of those interpreters explicitly; a distro default may be newer and unsupported. On Ubuntu or Debian, install the matching venv package before the primary setup path. For example, Ubuntu 24.04 users selecting Python 3.12 need `python3.12-venv`:
 
 ```sh
-python3 -m venv .venv-prove
+sudo apt install python3.12-venv
+```
+
+This installs venv support for that interpreter. It does not replace the system Python or install Prove into it. See the [Ubuntu Python setup guide](https://ubuntu.com/developers/docs/howto/python-setup/) and the [Ubuntu `python3.12-venv` package record](https://packages.ubuntu.com/noble/python3.12-venv) for the matching-package relationship.
+
+With a supported interpreter and its venv support, create an isolated environment and install the reviewed wheel:
+
+```sh
+/usr/bin/python3.12 -m venv .venv-prove
 . .venv-prove/bin/activate
 python -m pip install /absolute/path/to/triplepass_prove-0.1.0a1-py3-none-any.whl
 prove --version
 ```
+
+If [`uv`](https://docs.astral.sh/uv/pip/environments/) is already installed, it is an optional fallback, not a Prove runtime dependency. It can create an environment without `ensurepip`, then install the wheel without needing `pip` inside that environment:
+
+```sh
+uv venv --python /absolute/path/to/supported/python .venv-prove
+uv pip install --python .venv-prove/bin/python /absolute/path/to/triplepass_prove-0.1.0a1-py3-none-any.whl
+uv pip check --python .venv-prove/bin/python
+. .venv-prove/bin/activate
+prove --version
+```
+
+The console command works after activation even if the environment has no `pip` command. Do not use `sudo pip`.
 
 Alternatively install a reviewed source checkout with `python -m pip install /absolute/path/to/prove`. Installation may fetch dependencies. A fully offline installation needs a separately prepared wheelhouse containing Prove and all dependencies, then `python -m pip install --no-index --find-links /absolute/path/to/wheelhouse triplepass-prove==0.1.0a1`. No unpublished PyPI release is assumed.
 
